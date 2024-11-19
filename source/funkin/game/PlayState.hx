@@ -1002,8 +1002,6 @@ class PlayState extends MusicBeatState
 
 		camZoomingInterval = cast songData.meta.beatsPerMeasure.getDefault(4);
 
-		Conductor.changeBPM(songData.meta.bpm, cast songData.meta.beatsPerMeasure.getDefault(4), cast songData.meta.stepsPerBeat.getDefault(4));
-
 		curSong = songData.meta.name.toLowerCase();
 
 		inst = FlxG.sound.load(Paths.inst(SONG.meta.name, difficulty));
