@@ -403,7 +403,7 @@ class CoolUtil
 			}
 
 			var bpm:Null<Float> = Std.parseFloat(musicInfo["BPM"]).getDefault(DefaultBPM);
-			Conductor.changeBPM(bpm, beatsPerMeasure, stepsPerBeat);
+			Conductor.changeBPM(bpm, beatsPerMeasure, floorInt(stepsPerBeat));
 		} else
 			Conductor.changeBPM(DefaultBPM);
 	}
@@ -741,6 +741,15 @@ class CoolUtil
 		return p1 < p2 ? p2 : p1;
 
 	/**
+	 * Equivalent of `Math.min`, except doesn't require a Int -> Float -> Int conversion.
+	 * @param p1
+	 * @param p2
+	 * @return return p1 > p2 ? p2 : p1
+	 */
+	@:noUsing public static inline function minInt(p1:Int, p2:Int)
+		return p1 > p2 ? p2 : p1;
+
+	/**
 	 * Equivalent of `Math.floor`, except doesn't require a Int -> Float -> Int conversion.
 	 * @param e Value to get the floor of.
 	 */
@@ -779,6 +788,36 @@ class CoolUtil
 	 @:noUsing public static inline function getFilename(file:String) {
 		var file = new haxe.io.Path(file);
 		return file.file;
+	}
+
+	public static inline function bound(Value:Float, Min:Float, Max:Float):Float {
+		#if cpp
+		var _hx_tmp1:Float = Value;
+		var _hx_tmp2:Float = Min;
+		var _hx_tmp3:Float = Max;
+		return untyped __cpp__("((({0}) < ({1})) ? ({1}) : (({0}) > ({2})) ? ({2}) : ({0}))", _hx_tmp1, _hx_tmp2, _hx_tmp3);
+		#else
+		return (Value < Min) ? Min : (Value > Max) ? Max : Value;
+		#end
+	}
+
+	public static inline function boundInt(Value:Int, Min:Int, Max:Int):Int {
+		#if cpp
+		var _hx_tmp1:Int = Value;
+		var _hx_tmp2:Int = Min;
+		var _hx_tmp3:Int = Max;
+		return untyped __cpp__("((({0}) < ({1})) ? ({1}) : (({0}) > ({2})) ? ({2}) : ({0}))", _hx_tmp1, _hx_tmp2, _hx_tmp3);
+		#else
+		return (Value < Min) ? Min : (Value > Max) ? Max : Value;
+		#end
+	}
+
+	public static inline function boolToInt(b:Bool):Int {
+		#if cpp
+		return untyped __cpp__("(({0}) ? 1 : 0)", b);
+		#else
+		return b ? 1 : 0;
+		#end
 	}
 
 	/**
